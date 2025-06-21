@@ -81,7 +81,18 @@ server.on('request', async (req, res, next) => {
       }
     })
   }
- 
+  if(parsedUrl.pathname == "/read-file" && req.method == "GET"){
+    const parsedParams = parsedUrl.query
+    try{
+      fs.readFile(path.join('files', parsedParams.fileName), 'utf-8', (err, data) => {
+        if (err) throw new err
+        res.writeHead(200, {'Content-Type': 'application/json'})
+        res.end(JSON.stringify({message: "Found the content", data }))
+      })
+    }catch(error){
+      console.log(error)
+    }
+  }
 })
 
 server.listen(process.env.PORTNUMBER, process.env.IP, () => {
